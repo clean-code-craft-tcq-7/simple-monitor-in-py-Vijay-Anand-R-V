@@ -35,5 +35,29 @@ def check_spo2(spo2):
 
   return True
 
-def vitals_ok(temperature, pulseRate, spo2):
-  return check_temperature(temperature) & check_pulseRate(pulseRate) & check_spo2(spo2)
+def check_bp(bp):
+  if bp[0] < 90 or bp[0] > 140 or bp[1] < 60 or bp[1] > 90:
+    print('Blood Pressure is out of range!')
+    print_info()
+    return False
+
+  return True
+
+def check_respiration(respiration):
+  if respiration < 12 or respiration > 20:
+    print('Respiration rate is out of range!')
+    print_info()
+    return False
+
+  return True
+
+def custom_checks(*kwargs):
+  results = 1
+  if "bp" in kwargs:
+    results &= check_bp(kwargs["bp"])
+  if "respiration" in kwargs:
+    results &= check_respiration(kwargs["respiration"])
+  return results
+
+def vitals_ok(temperature, pulseRate, spo2, *kwargs):
+  return check_temperature(temperature) & check_pulseRate(pulseRate) & check_spo2(spo2) & custom_checks(*kwargs)
